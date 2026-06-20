@@ -31,6 +31,7 @@ A pergunta central: **qual a melhor forma de montar um "segundo cérebro" usando
 |---|---|
 | [`docs/comparacao-segundo-cerebros.md`](docs/comparacao-segundo-cerebros.md) | Análise comparativa completa: 3 projetos → panorama do GitHub → Karpathy vs Obsidian → kepano (formato) → graphify (recuperação) → os 3 tipos de cérebro → conclusão. |
 | [`docs/estrutura-3-cerebros.md`](docs/estrutura-3-cerebros.md) | Proposta de **estrutura de pastas** dos 3 cérebros (Projeto/Self/Conhecimento), skills por zona, fluxo de uso e 6 decisões em aberto pra pensar. |
+| [`docs/ideia-3cerebros-portavel.md`](docs/ideia-3cerebros-portavel.md) | **Parking lot:** ideia de um `3cerebros` portátil (Claude/Codex/Hermes/AgentZero/OpenClaw…), autônomo (entrevista → política de automação), com painel e conectores (email/Telegram/WhatsApp/ChatGPT export). Inclui gating "os sistemas já não fazem isso?". |
 
 ## Status
 

@@ -21,28 +21,53 @@ Um projeto novo, talvez `3cerebros`, que:
 ## ⚠️ ANTES de construir: os sistemas já não fazem isso? (gating)
 
 Regra do Nei: **checar se os sistemas existentes já têm esses recursos** antes de
-construir. Não reinventar. Abaixo, meu palpite atual (a **verificar** repo por repo
-e nas docs de cada runtime — é pesquisa a fazer, não conclusão fechada):
+construir. Pesquisa feita (3 agentes web, 2026-06-20). Legenda de confiança:
+**✅ verificado** (evidência/observação direta) · **⚠️ alegação web não confirmada**
+(número/data veio de agente, tratar com ceticismo). Correção: `zubair-trabzada/brain-map`
+**existe** (clonado nesta sessão, 16⭐) — um agente disse que não; ignore.
 
-| Frente | Quem já faz (palpite) | Veredito provável |
-|---|---|---|
-| **Portabilidade cross-runtime** | Agent Skills spec (kepano, polyskill já cobre Claude+Codex); `graphify` roda em ~20 runtimes; `eugeniughelbur/obsidian-second-brain` é "cross-CLI" | **Largamente resolvido** — reusar a spec, não criar formato novo |
-| **Conectores (email/Telegram/WhatsApp/ChatGPT/social)** | `khoj-ai/khoj` tem integrações; existem **MCP servers** prontos (Gmail, Telegram…); importadores de ChatGPT export já existem | **Reusar** — provavelmente via MCP + exports, não conectores caseiros |
-| **Painel / dashboard** | `brain-map`/Brain Studio (grafo), `graphify` (graph.html), khoj (UI) | **Base existe** (visual); falta a camada *operacional* (o que foi automatizado / pendente / saúde) |
-| **Modo autônomo (self-organizing)** | `AgriciDaniel/claude-obsidian` ("drop e ele arquiva"), `huytieu/COG` (worker agents), `henrydaum/second-brain` (agentic) | **Existe em parte** — mas geralmente sem política de limites clara |
-| **Entrevista → política de automação (o que pode/não pode)** | — não vi ninguém fazer isso explícito | **Provável GAP / diferencial** |
+### Matriz A — projetos de second-brain (com evidência/URL)
 
-**Leitura honesta:** portabilidade, conectores e visualização já estão **muito
-servidos** lá fora — o `3cerebros` deve **apoiar-se neles** (MCP pros conectores,
-Agent Skills spec pra portar, brain-map de base pro painel). O que parece
-**genuinamente faltar** — e seria o diferencial — é a combinação:
-**separação em 3 cérebros + modo autônomo governado por uma política definida numa
-entrevista + um painel operacional (não só grafo)**, tudo sobre os mesmos arquivos.
+| Projeto | Autônomo | Conectores | Painel | Cross-runtime | Entrevista→política |
+|---|---|---|---|---|---|
+| khoj-ai/khoj | parcial (cron→email) | parcial (PDF/Notion/GitHub) | parcial (admin Django) | **não** (é o runtime) | não |
+| AgriciDaniel/claude-obsidian | parcial (`/autoresearch`, auto-commit 15min) | parcial (drop + Web Clipper) | **sim** (`dashboard.base`/Dataview) | sim (exp.: Codex/Cursor/Gemini) | não ("what is this vault for?") |
+| SamurAIGPT/llm-wiki-agent | não | parcial (markitdown: PDF/DOCX…) | não (`graph.html` estático) | **sim** (Claude/Codex/Gemini/OpenCode) | não |
+| huytieu/COG-second-brain | não (17 skills manuais) | parcial (Linear/GitHub/Jira/Slack/Notion) | parcial (Tasks) | **sim** (6 surfaces) | **parcial** (`/onboarding` → integrações) |
+| henrydaum/second-brain | **sim** (cron Timekeeper + watcher) | parcial (Telegram nativo, OCR, whisper) | parcial (`/debug`, heartbeat) | sim (AGENTS.md) | parcial (`/setup`, limites hardcoded) |
+| eugeniughelbur/obsidian-second-brain | **sim** (4 cron + PostCompact, "mantém enquanto você dorme") | parcial (Telegram, Calendar, X, YouTube) | parcial (`/obsidian-health`) | **sim** ("one codebase, four platforms") | não |
 
-**Tarefa antes de decidir construir:** uma rodada de pesquisa que confirme, recurso
-por recurso, o que cada sistema/runtime (khoj, claude-obsidian, COG, Hermes,
-AgentZero, OpenClaw, Intelecto, MCP servers) já entrega — e isolar o que sobra
-de novo. Se sobrar pouco, talvez seja **integrar/configurar**, não construir.
+### Matriz B — runtimes/agentes (⚠️ vários números/datas não confirmados)
+
+| Runtime | Memória nativa | Autônomo (cron/daemon) | Mensageria nativa | MCP | Acoplar skills .md |
+|---|---|---|---|---|---|
+| Claude Code | parcial (arquivos+tasks) | sim (tasks+hooks) | não (via MCP) | ✅ sim | ✅ excelente (padrão SKILL.md) |
+| Codex CLI | parcial (AGENTS.md) | parcial (modos approval) | não | ✅ sim | parcial (AGENTS.md) |
+| Hermes ⚠️ | sim (alegado) | sim (cron) | sim (TG/WA/Discord…) | sim | sim |
+| agent-zero ⚠️ | sim (vetorial) | sim (multi-agente Docker) | parcial (plugin) | sim | sim (SKILL.md) |
+| OpenClaw ⚠️ | parcial (plugins) | sim (daemon, computer-use) | sim (30+ plataformas) | sim | sim (registry) |
+| **Intelecto** = `inematds/intelecto` ⚠️ | sim (SQLite FTS5 + SOUL/AGENTS/USER.md) | não | sim (Telegram) | ambíguo | ✅ excelente (já é .md-driven) — **é seu próprio projeto** |
+
+### Infra pronta pra REUSAR (não construir)
+- **Conectores via MCP:** Gmail (`GongRzhe/Gmail-MCP-Server`), Telegram (`chigwell/telegram-mcp`),
+  WhatsApp (`lharries/whatsapp-mcp` — ⚠️ bridge não-oficial, risco de ban), redes sociais (**Postiz**, OSS).
+- **Importar exports → Markdown:** ChatGPT (`gavi/chatgpt-markdown`, `Nexus AI Chat Importer`),
+  Telegram (`tg2obsidian`), WhatsApp (plugin Obsidian). ChatGPT export = `conversations.json` (árvore).
+- **Portabilidade:** **Agent Skills spec** (agentskills.io, padrão aberto Anthropic) — mesma skill em ~20 runtimes;
+  vários projetos já fazem via `AGENTS.md` + `build.sh --platform`.
+- **Painel base:** `brain-map` (grafo + timeline + click-to-inspect) e `graphify` (grafo queryável + MCP).
+
+### Veredito (responde "os sistemas já não fazem isso?")
+**Já fazem — quase tudo.** Dos 5 recursos:
+- **Portabilidade** → ✅ **resolvido** (Agent Skills spec + AGENTS.md). Não construir; seguir o padrão.
+- **Modo autônomo** → ✅ **já existe pronto** (henrydaum e eugeniughelbur rodam cron/background "enquanto você dorme"). Copiar o padrão, não reinventar.
+- **Conectores** → ✅ **reusáveis** via MCP + importadores .md (gap nos projetos de brain, mas a infra existe). Só plugar.
+- **Painel** → parcial (saúde em texto + brain-map/graphify visual). Falta só a camada **operacional** (o que foi automatizado / pendente de aprovação).
+- **Entrevista → política de automação** → ❗ **GAP REAL.** Nenhum dos 6 tem política de *permissões de autonomia* (COG chega perto, mas é mapa de integrações, não de limites).
+
+**Conclusão:** o que sobra de genuinamente novo é fino — **(1) a separação em 3 cérebros** (Projeto/Self/Conhecimento, que ninguém faz explícito) + **(2) autonomia governada por uma entrevista que define o que pode/não pode** + **(3) um painel operacional**. Todo o resto é **integrar/configurar** peças existentes. Então `3cerebros`, se acontecer, é **integration-first**: monta sobre MCP + Agent Skills spec + um background-agent (estilo eugeniughelbur) + brain-map, e constrói só a camada fina de política+3-cérebros+painel.
+
+**Atalho possível:** como **Intelecto** (`inematds/intelecto`) já é um agente .md-driven com memória e Telegram **e é seu**, o `3cerebros` pode nascer como uma *evolução dele* (adicionar os 3 cérebros + política), em vez de projeto do zero.
 
 ## Como eu leio isso (5 frentes)
 
